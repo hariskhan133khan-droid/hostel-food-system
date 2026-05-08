@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <title>Login - Hostel Food System</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #0d0d0d;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .login {
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      overflow: hidden;
+    }
+
+    .login::before {
+      content: '';
+      position: absolute;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(160,120,64,0.22) 0%, transparent 70%);
+      top: -100px; right: -100px;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .login::after {
+      content: '';
+      position: absolute;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(80,60,180,0.15) 0%, transparent 70%);
+      bottom: -80px; left: -80px;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .login__form {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 390px;
+      background: rgba(255,255,255,0.04);
+      border: 0.5px solid rgba(255,255,255,0.13);
+      border-radius: 20px;
+      padding: 2.8rem 2.2rem;
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      animation: formIn 0.75s cubic-bezier(0.23,1,0.32,1) both;
+    }
+
+    @keyframes formIn {
+      from { opacity: 0; transform: translateY(32px) scale(0.96); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    .login__logo {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      animation: fadeUp 0.6s 0.05s both;
+    }
+
+    .login__logo i {
+      font-size: 40px;
+      color: #c8a96e;
+    }
+
+    .login__title {
+      font-family: 'Playfair Display', serif;
+      font-size: 30px;
+      font-weight: 600;
+      color: #f0ede6;
+      letter-spacing: -0.5px;
+      margin-bottom: 0.3rem;
+      animation: fadeUp 0.6s 0.1s both;
+    }
+
+    .login__subtitle {
+      font-size: 13px;
+      color: rgba(240,237,230,0.38);
+      margin-bottom: 2rem;
+      animation: fadeUp 0.6s 0.15s both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    .login__content {
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+      margin-bottom: 1.3rem;
+    }
+
+    .login__box {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      background: rgba(255,255,255,0.055);
+      border: 0.5px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 0 16px;
+      transition: border-color 0.25s, background 0.25s;
+      animation: fadeUp 0.6s both;
+    }
+
+    .login__box:nth-child(1) { animation-delay: 0.2s; }
+    .login__box:nth-child(2) { animation-delay: 0.28s; }
+
+    .login__box:focus-within {
+      border-color: rgba(210,180,120,0.5);
+      background: rgba(255,255,255,0.08);
+    }
+
+    .login__box.error {
+      border-color: rgba(231,76,60,0.6) !important;
+      background: rgba(231,76,60,0.05) !important;
+      animation: shake 0.4s ease;
+    }
+
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      20%      { transform: translateX(-8px); }
+      40%      { transform: translateX(8px); }
+      60%      { transform: translateX(-5px); }
+      80%      { transform: translateX(5px); }
+    }
+
+    .login__icon { font-size: 19px; color: rgba(210,180,120,0.65); flex-shrink: 0; }
+
+    .login__box-input { position: relative; flex: 1; padding: 15px 0 7px; }
+
+    .login__input {
+      width: 100%;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #f0ede6;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      padding-top: 8px;
+    }
+
+    .login__input:-webkit-autofill {
+      -webkit-box-shadow: 0 0 0 30px #1a1610 inset !important;
+      -webkit-text-fill-color: #f0ede6 !important;
+    }
+
+    .login__label {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+      font-size: 13px;
+      color: rgba(240,237,230,0.4);
+      pointer-events: none;
+      transition: top 0.25s, font-size 0.25s, color 0.25s, transform 0.25s;
+    }
+
+    .login__input:not(:placeholder-shown) ~ .login__label,
+    .login__input:focus ~ .login__label {
+      top: 8px; font-size: 10px;
+      color: rgba(210,180,120,0.85);
+      transform: none;
+    }
+
+    .login__eye {
+      position: absolute;
+      right: 0; top: 50%;
+      transform: translateY(-50%);
+      font-size: 18px;
+      color: rgba(240,237,230,0.3);
+      cursor: pointer;
+      transition: color 0.2s;
+      user-select: none;
+    }
+    .login__eye:hover { color: rgba(210,180,120,0.8); }
+
+    .login__check {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      animation: fadeUp 0.6s 0.36s both;
+    }
+
+    .login__check-group { display: flex; align-items: center; gap: 7px; }
+    .login__check-input { width: 15px; height: 15px; accent-color: #c8a96e; cursor: pointer; }
+    .login__check-label { font-size: 12.5px; color: rgba(240,237,230,0.5); cursor: pointer; }
+
+    .login__forgot { font-size: 12.5px; color: rgba(210,180,120,0.65); text-decoration: none; transition: color 0.2s; }
+    .login__forgot:hover { color: #c8a96e; }
+
+    .login__button {
+      width: 100%;
+      padding: 13.5px;
+      background: linear-gradient(135deg, #c8a96e 0%, #9e7438 100%);
+      color: #1a130a;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      margin-bottom: 1.2rem;
+      transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+      animation: fadeUp 0.6s 0.44s both;
+    }
+
+    .login__button:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(200,169,110,0.25); }
+    .login__button:active { transform: scale(0.98); }
+
+    .login__register {
+      text-align: center;
+      font-size: 12.5px;
+      color: rgba(240,237,230,0.38);
+      animation: fadeUp 0.6s 0.52s both;
+    }
+
+    /* ERROR MESSAGE */
+    .error-msg {
+      font-size: 12px;
+      color: #e74c3c;
+      text-align: center;
+      margin-bottom: 1rem;
+      min-height: 18px;
+      animation: fadeUp 0.3s both;
+    }
+
+    /* SUCCESS OVERLAY */
+    .success-overlay {
+      position: fixed;
+      inset: 0;
+      background: #0d0d0d;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s;
+    }
+
+    .success-overlay.show {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .success-emoji {
+      font-size: 72px;
+      animation: popIn 0.5s cubic-bezier(0.23,1,0.32,1) both;
+      margin-bottom: 1rem;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.3); opacity: 0; }
+      to   { transform: scale(1); opacity: 1; }
+    }
+
+    .success-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 26px;
+      color: #f0ede6;
+      animation: fadeUp 0.5s 0.2s both;
+      margin-bottom: 0.5rem;
+    }
+
+    .success-sub {
+      font-size: 13px;
+      color: rgba(240,237,230,0.4);
+      animation: fadeUp 0.5s 0.3s both;
+    }
+
+    .success-bar {
+      width: 200px;
+      height: 3px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 10px;
+      margin-top: 2rem;
+      overflow: hidden;
+      animation: fadeUp 0.5s 0.4s both;
+    }
+
+    .success-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #c8a96e, #9e7438);
+      border-radius: 10px;
+      transition: width 1.8s linear;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SUCCESS OVERLAY -->
+  <div class="success-overlay" id="successOverlay">
+    <div class="success-emoji">🎉</div>
+    <p class="success-text">Login کامیاب!</p>
+    <p class="success-sub">Home Page کھل رہا ہے…</p>
+    <div class="success-bar">
+      <div class="success-bar-fill" id="successBar"></div>
+    </div>
+  </div>
+
+  <div class="login">
+    <form class="login__form" id="loginForm" onsubmit="return false;">
+
+      <div class="login__logo"><i class="ri-restaurant-2-line"></i></div>
+      <h1 class="login__title">Hostel Food</h1>
+      <p class="login__subtitle">System میں خوش آمدید</p>
+
+      <div class="login__content">
+        <div class="login__box" id="emailBox">
+          <i class="ri-user-3-line login__icon"></i>
+          <div class="login__box-input">
+            <input type="text" class="login__input" id="login-email" placeholder=" " autocomplete="off">
+            <label for="login-email" class="login__label">Username</label>
+          </div>
+        </div>
+
+        <div class="login__box" id="passBox">
+          <i class="ri-lock-2-line login__icon"></i>
+          <div class="login__box-input">
+            <input type="password" class="login__input" id="login-pass" placeholder=" ">
+            <label for="login-pass" class="login__label">Password</label>
+            <i class="ri-eye-off-line login__eye" id="login-eye"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="login__check">
+        <div class="login__check-group">
+          <input type="checkbox" class="login__check-input" id="login-check">
+          <label for="login-check" class="login__check-label">یاد رکھو</label>
+        </div>
+        <a href="#" class="login__forgot">Password بھول گئے؟</a>
+      </div>
+
+      <p class="error-msg" id="errorMsg"></p>
+
+      <button class="login__button" id="loginBtn" onclick="doLogin()">Login کریں</button>
+
+      <p class="login__register">
+        🏠 Hostel Food Management System
+      </p>
+    </form>
+  </div>
+
+  <script>
+    /* ===== CREDENTIALS ===== */
+    const CORRECT_USER = 'admin';
+    const CORRECT_PASS = 'hostel123';
+
+    /* ===== PASSWORD TOGGLE ===== */
+    const eyeIcon = document.getElementById('login-eye');
+    const passInput = document.getElementById('login-pass');
+
+    eyeIcon.addEventListener('click', () => {
+      const isHidden = passInput.type === 'password';
+      passInput.type = isHidden ? 'text' : 'password';
+      eyeIcon.classList.toggle('ri-eye-line', isHidden);
+      eyeIcon.classList.toggle('ri-eye-off-line', !isHidden);
+    });
+
+    /* ===== LOGIN LOGIC ===== */
+    function doLogin() {
+      const user = document.getElementById('login-email').value.trim();
+      const pass = document.getElementById('login-pass').value;
+      const errorMsg = document.getElementById('errorMsg');
+      const emailBox = document.getElementById('emailBox');
+      const passBox = document.getElementById('passBox');
+      const btn = document.getElementById('loginBtn');
+
+      emailBox.classList.remove('error');
+      passBox.classList.remove('error');
+      errorMsg.textContent = '';
+
+      if (!user || !pass) {
+        errorMsg.textContent = '⚠️ Username اور Password ڈالیں';
+        if (!user) emailBox.classList.add('error');
+        if (!pass) passBox.classList.add('error');
+        return;
+      }
+
+      if (user !== CORRECT_USER || pass !== CORRECT_PASS) {
+        errorMsg.textContent = '❌ غلط Username یا Password';
+        emailBox.classList.add('error');
+        passBox.classList.add('error');
+        passInput.value = '';
+        return;
+      }
+
+      /* ===== SUCCESS ===== */
+      btn.textContent = 'Logging in…';
+      btn.disabled = true;
+
+      const overlay = document.getElementById('successOverlay');
+      overlay.classList.add('show');
+
+      setTimeout(() => {
+        document.getElementById('successBar').style.width = '100%';
+      }, 100);
+
+      setTimeout(() => {
+        window.location.href = 'home.html';
+      }, 2200);
+    }
+
+    /* Enter key support */
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') doLogin();
+    });
+  </script>
+</body>
+</html>
